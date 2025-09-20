@@ -1,5 +1,9 @@
 package com.codewithmosh.store.controllers;
 
+import com.codewithmosh.store.exceptions.InvalidCategoryException;
+import com.codewithmosh.store.exceptions.ProductNotFoundException;
+import com.codewithmosh.store.exceptions.UserNotFoundException;
+import com.codewithmosh.store.exceptions.WrongPasswordException;
 import jakarta.validation.ConstraintViolationException;
 import org.hibernate.validator.constraintvalidators.RegexpURLValidator;
 import org.springframework.http.HttpStatus;
@@ -41,5 +45,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         return new ResponseEntity<>("Invalid parameter format. " + ex.getName() + " should be of type " + ex.getRequiredType().getSimpleName(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidCategoryException.class)
+    public ResponseEntity<String> handleInvalidCategoryException(InvalidCategoryException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(WrongPasswordException.class)
+    public ResponseEntity<String> handleWrongPasswordException(WrongPasswordException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }

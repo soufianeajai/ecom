@@ -1,4 +1,4 @@
-package com.codewithmosh.store.dtos;
+package com.codewithmosh.store.dtos.user;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

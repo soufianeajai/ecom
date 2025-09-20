@@ -1,6 +1,6 @@
 package com.codewithmosh.store.mappers;
 
-import com.codewithmosh.store.dtos.ProductDto;
+import com.codewithmosh.store.dtos.product.ProductDto;
 import com.codewithmosh.store.entities.Product;
 import com.codewithmosh.store.utils.CategoryMapperHelper;
 import org.mapstruct.Mapper;
