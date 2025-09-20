@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 
     @GetMapping
-    public User index() {
-        User user = User.builder().name("Soufiane").build();
-        return user;
+    public String Home() {
+        return "Welcome to Our App.";
     }
 }

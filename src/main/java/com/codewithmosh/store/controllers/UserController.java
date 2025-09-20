@@ -8,6 +8,7 @@ import com.codewithmosh.store.entities.User;
 import com.codewithmosh.store.mappers.UserMapper;
 import com.codewithmosh.store.utils.UserSortField;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody RegisterUserDto registerUserDto, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody RegisterUserDto registerUserDto, UriComponentsBuilder uriBuilder){
         User user = userMapper.toEntity(registerUserDto);
         UserDto userDto = userMapper.todto(userRepository.save(user));
         var path = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
@@ -60,8 +61,7 @@ public class UserController {
     @Transactional
     public ResponseEntity<UserDto> updateUser(@RequestBody UpdateUserDto updateUserDto, @PathVariable Long id){
         User user = userRepository.findById(id).orElse(null);
-        if (user == null)
-            return ResponseEntity.notFound().build();
+        if (user == null) return ResponseEntity.notFound().build();
         userMapper.updateUserFromDto(updateUserDto, user);
         return  ResponseEntity.ok(userMapper.todto(user));
     }
