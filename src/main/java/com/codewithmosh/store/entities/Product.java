@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "products")
 public class Product {
     @Id
@@ -27,7 +28,7 @@ public class Product {
     @Column(name = "price")
     private BigDecimal price;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "category_id")
     private Category category;
 }
