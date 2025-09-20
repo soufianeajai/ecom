@@ -7,6 +7,7 @@ import com.codewithmosh.store.exceptions.ProductNotFoundException;
 import com.codewithmosh.store.mappers.ProductMapper;
 import com.codewithmosh.store.repositories.ProductRepository;
 import com.codewithmosh.store.services.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,11 +41,13 @@ public class ProductServiceImpl implements ProductService {
         Product savedProduct = productRepository.save(product);
         return productMapper.toDto(savedProduct);
     }
+    @Transactional
     public ProductDto updateProduct(ProductDto productDto, Long id){
         Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product with the Id " + id + " is not found"));
         productMapper.updateProductFromDto(productDto, product);
         return productMapper.toDto(product);
     }
+    @Transactional
     public void deleteProduct(Long id){
         Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product with the Id " + id + " is not found"));
         productRepository.delete(product);

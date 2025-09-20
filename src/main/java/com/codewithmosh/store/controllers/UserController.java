@@ -45,20 +45,17 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @Transactional
     public ResponseEntity<UserDto> updateUser(@RequestBody UpdateUserDto updateUserDto, @PathVariable Long id){
         return  ResponseEntity.ok(userService.updateUser(updateUserDto, id));
     }
 
     @DeleteMapping("/{id}")
-    @Transactional
     public ResponseEntity<Void> deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/change-password")
-    @Transactional
     public ResponseEntity<UserDto> changeUserPassword(@PathVariable Long id, @RequestBody PasswordDto passwordDto, UriComponentsBuilder uri){
         UserDto userDto = userService.changeUserPassword(id, passwordDto);
         var path = uri.path("/{id}/change-password").buildAndExpand(userDto.getId()).toUri();

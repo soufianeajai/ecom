@@ -11,6 +11,7 @@ import com.codewithmosh.store.mappers.UserMapper;
 import com.codewithmosh.store.repositories.UserRepository;
 import com.codewithmosh.store.services.UserService;
 import com.codewithmosh.store.utils.UserSortField;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -45,15 +46,19 @@ public class UserServiceImpl implements UserService {
         return userMapper.todto(userRepository.save(user));
     }
 
+    @Transactional
     public UserDto updateUser(UpdateUserDto updateUserDto, Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("the user with id " + id + " not found"));
         userMapper.updateUserFromDto(updateUserDto, user);
         return userMapper.todto(user);
     }
+    @Transactional
     public void deleteUser(Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("the user with id " + id + " not found"));
         userRepository.delete(user);
     }
+
+    @Transactional
     public UserDto changeUserPassword(Long id, PasswordDto passwordDto){
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("the user with id " + id + " not found"));
         if (!Objects.equals(passwordDto.getOldPassword(), user.getPassword()))
