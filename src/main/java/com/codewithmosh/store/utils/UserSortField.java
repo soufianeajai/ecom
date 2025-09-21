@@ -11,13 +11,4 @@ public enum UserSortField {
     EMAIL("email");
 
     private final String fieldName;
-
-    public static UserSortField fromString(String fieldName) {
-        for (UserSortField field : UserSortField.values()) {
-            if (field.fieldName.equalsIgnoreCase(fieldName)) {
-                return field;
-            }
-        }
-        return ID;
-    }
 }

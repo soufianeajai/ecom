@@ -4,13 +4,12 @@ import com.codewithmosh.store.dtos.user.PasswordDto;
 import com.codewithmosh.store.dtos.user.RegisterUserDto;
 import com.codewithmosh.store.dtos.user.UpdateUserDto;
 import com.codewithmosh.store.dtos.user.UserDto;
-import com.codewithmosh.store.entities.User;
-import com.codewithmosh.store.mappers.UserMapper;
 import com.codewithmosh.store.services.UserService;
 import com.codewithmosh.store.utils.UserSortField;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@Validated
 public class UserController {
     private final UserService userService;
 
@@ -27,13 +27,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping()
-    public ResponseEntity<List<UserDto>> getAllUsers(@RequestParam(required = false, defaultValue = "", name = "sort") String sortBy) {
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAllUsers(@RequestParam(defaultValue = "ID") UserSortField sortBy) {
         return ResponseEntity.ok(userService.getAllUsers(sortBy));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable @Positive Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UpdateUserDto updateUserDto, @PathVariable Long id){
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserDto updateUserDto, @PathVariable @Positive Long id){
         return  ResponseEntity.ok(userService.updateUser(updateUserDto, id));
     }
 
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/change-password")
-    public ResponseEntity<UserDto> changeUserPassword(@PathVariable Long id, @RequestBody PasswordDto passwordDto, UriComponentsBuilder uri){
+    public ResponseEntity<UserDto> changeUserPassword(@PathVariable @Positive Long id, @Valid @RequestBody PasswordDto passwordDto, UriComponentsBuilder uri){
         UserDto userDto = userService.changeUserPassword(id, passwordDto);
         var path = uri.path("/{id}/change-password").buildAndExpand(userDto.getId()).toUri();
         return ResponseEntity.created(path).body(userDto);

@@ -31,26 +31,25 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public List<UserDto> getAllUsers(String sortBy){
-        String validatedSortBy = UserSortField.fromString(sortBy).getFieldName();
-        return userRepository.findAll(Sort.by(validatedSortBy)).stream()
-                .map(userMapper::todto)
+    public List<UserDto> getAllUsers(UserSortField sortBy) {
+        return userRepository.findAll(Sort.by(sortBy.getFieldName())).stream()
+                .map(userMapper::toDto)
                 .toList();
     }
     public UserDto getUserById(Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("the user with id " + id + " not found"));
-        return userMapper.todto(user);
+        return userMapper.toDto(user);
     }
     public UserDto createUser(RegisterUserDto registerUserDto){
         User user = userMapper.toEntity(registerUserDto);
-        return userMapper.todto(userRepository.save(user));
+        return userMapper.toDto(userRepository.save(user));
     }
 
     @Transactional
     public UserDto updateUser(UpdateUserDto updateUserDto, Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("the user with id " + id + " not found"));
         userMapper.updateUserFromDto(updateUserDto, user);
-        return userMapper.todto(user);
+        return userMapper.toDto(user);
     }
     @Transactional
     public void deleteUser(Long id){
@@ -64,6 +63,6 @@ public class UserServiceImpl implements UserService {
         if (!Objects.equals(passwordDto.getOldPassword(), user.getPassword()))
             throw new WrongPasswordException("wrong old password");
         user.setPassword(passwordDto.getNewPassword());
-        return userMapper.todto(user);
+        return userMapper.toDto(user);
     }
 }

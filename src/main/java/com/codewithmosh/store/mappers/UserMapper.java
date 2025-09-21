@@ -5,12 +5,11 @@ import com.codewithmosh.store.dtos.user.UpdateUserDto;
 import com.codewithmosh.store.dtos.user.UserDto;
 import com.codewithmosh.store.entities.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserDto todto(User user);
+    UserDto toDto(User user);
     User toEntity(RegisterUserDto registerUserDto);
     void updateUserFromDto(UpdateUserDto dto, @MappingTarget User user);
 
