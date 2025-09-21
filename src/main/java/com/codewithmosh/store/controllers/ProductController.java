@@ -1,8 +1,7 @@
 package com.codewithmosh.store.controllers;
 
-import com.codewithmosh.store.dtos.product.ProductDto;
+import com.codewithmosh.store.dtos.product.*;
 import com.codewithmosh.store.services.ProductService;
-import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,14 +29,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto, UriComponentsBuilder uri){
+    public ResponseEntity<ProductDto> createProduct(@RequestBody CreateProductDto productDto, UriComponentsBuilder uri){
         ProductDto product = productService.createProduct(productDto);
         var path = uri.path("/products/{id}").buildAndExpand(product.getId()).toUri();
         return ResponseEntity.created(path).body(product);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductDto productDto, @PathVariable Long id){
+    public ResponseEntity<ProductDto> updateProduct(@RequestBody UpdateProductDto productDto, @PathVariable Long id){
         ProductDto product = productService.updateProduct(productDto, id);
         return ResponseEntity.ok(product);
     }

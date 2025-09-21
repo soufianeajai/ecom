@@ -1,6 +1,6 @@
 package com.codewithmosh.store.services.impl;
 
-import com.codewithmosh.store.dtos.product.ProductDto;
+import com.codewithmosh.store.dtos.product.*;
 import com.codewithmosh.store.entities.Product;
 import com.codewithmosh.store.exceptions.InvalidCategoryException;
 import com.codewithmosh.store.exceptions.ProductNotFoundException;
@@ -35,14 +35,14 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product with the Id " + id + " is not found"));
         return productMapper.toDto(product);
     }
-    public ProductDto createProduct(ProductDto productDto){
+    public ProductDto createProduct(CreateProductDto productDto){
         Product product = productMapper.toEntity(productDto);
         if (product.getCategory() == null) throw new InvalidCategoryException("Invalid Category");
         Product savedProduct = productRepository.save(product);
         return productMapper.toDto(savedProduct);
     }
     @Transactional
-    public ProductDto updateProduct(ProductDto productDto, Long id){
+    public ProductDto updateProduct(UpdateProductDto productDto, Long id){
         Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product with the Id " + id + " is not found"));
         productMapper.updateProductFromDto(productDto, product);
         return productMapper.toDto(product);

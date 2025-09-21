@@ -1,6 +1,8 @@
 package com.codewithmosh.store.mappers;
 
+import com.codewithmosh.store.dtos.product.CreateProductDto;
 import com.codewithmosh.store.dtos.product.ProductDto;
+import com.codewithmosh.store.dtos.product.UpdateProductDto;
 import com.codewithmosh.store.entities.Product;
 import com.codewithmosh.store.utils.CategoryMapperHelper;
 import org.mapstruct.Mapper;
@@ -12,10 +14,10 @@ public interface ProductMapper {
     @Mapping(source = "category.id", target = "categoryId")
     ProductDto toDto(Product product);
     @Mapping(source = "categoryId", target = "category")
-    Product toEntity(ProductDto productDto);
+    Product toEntity(CreateProductDto productDto);
     @Mapping(source = "categoryId", target = "category")
     @Mapping(target = "id", ignore = true)
-    void updateProductFromDto(ProductDto productDto, @MappingTarget Product product);
+    void updateProductFromDto(UpdateProductDto productDto, @MappingTarget Product product);
 }
 
 
