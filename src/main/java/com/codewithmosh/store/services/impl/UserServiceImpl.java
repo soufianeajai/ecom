@@ -5,6 +5,7 @@ import com.codewithmosh.store.dtos.user.RegisterUserDto;
 import com.codewithmosh.store.dtos.user.UpdateUserDto;
 import com.codewithmosh.store.dtos.user.UserDto;
 import com.codewithmosh.store.entities.User;
+import com.codewithmosh.store.exceptions.DuplicateEmailException;
 import com.codewithmosh.store.exceptions.UserNotFoundException;
 import com.codewithmosh.store.exceptions.WrongPasswordException;
 import com.codewithmosh.store.mappers.UserMapper;
@@ -37,31 +38,33 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
     public UserDto getUserById(Long id){
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("the user with id " + id + " not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         return userMapper.toDto(user);
     }
     public UserDto createUser(RegisterUserDto registerUserDto){
+        if (userRepository.existsByEmail(registerUserDto.getEmail()))
+            throw new DuplicateEmailException(registerUserDto.getEmail());
         User user = userMapper.toEntity(registerUserDto);
         return userMapper.toDto(userRepository.save(user));
     }
 
     @Transactional
     public UserDto updateUser(UpdateUserDto updateUserDto, Long id){
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("the user with id " + id + " not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         userMapper.updateUserFromDto(updateUserDto, user);
         return userMapper.toDto(user);
     }
     @Transactional
     public void deleteUser(Long id){
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("the user with id " + id + " not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         userRepository.delete(user);
     }
 
     @Transactional
     public UserDto changeUserPassword(Long id, PasswordDto passwordDto){
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("the user with id " + id + " not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         if (!Objects.equals(passwordDto.getOldPassword(), user.getPassword()))
-            throw new WrongPasswordException("wrong old password");
+            throw new WrongPasswordException();
         user.setPassword(passwordDto.getNewPassword());
         return userMapper.toDto(user);
     }

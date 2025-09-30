@@ -11,7 +11,7 @@ public class StringToUserSortFieldConverter implements Converter<String, UserSor
     public UserSortField convert(String source) {
         try {
             return UserSortField.valueOf(source.toUpperCase());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new InvalidSortFieldException("Invalid sort field: " + source);
         }
     }
